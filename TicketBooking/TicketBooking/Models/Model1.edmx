@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TicketBookingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Admins">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Buses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BusServiceId" Type="int" Nullable="false" />
+          <Property Name="BusNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Seats" Type="int" Nullable="false" />
+          <Property Name="Image" Type="nvarchar(max)" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="BusRoutes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BusId" Type="int" Nullable="false" />
+          <Property Name="RouteId" Type="int" Nullable="false" />
+          <Property Name="ArrivalTime" Type="datetime" Nullable="false" />
+          <Property Name="DepartureTime" Type="datetime" Nullable="false" />
+          <Property Name="ReservedSeats" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusServices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceName" Type="varchar" MaxLength="100" />
+          <Property Name="Image" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Routes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FromRoute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ToRoute" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FullName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Phone" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTickets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ReservedSeats" Type="int" Nullable="false" />
+          <Property Name="TicketId" Type="varchar(max)" Nullable="false" />
+          <Property Name="BusRouteId" Type="int" Nullable="false" />
+          <Property Name="PaidFare" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <Association Name="FK_Buses_BusServices">
+          <End Role="BusServices" Type="Self.BusServices" Multiplicity="1" />
+          <End Role="Buses" Type="Self.Buses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Buses">
+              <PropertyRef Name="BusServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusRoutes_Buses">
+          <End Role="Buses" Type="Self.Buses" Multiplicity="1" />
+          <End Role="BusRoutes" Type="Self.BusRoutes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BusRoutes">
+              <PropertyRef Name="BusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusRoutes_Routes">
+          <End Role="Routes" Type="Self.Routes" Multiplicity="1" />
+          <End Role="BusRoutes" Type="Self.BusRoutes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Routes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BusRoutes">
+              <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTIckets_BusRoutes">
+          <End Role="BusRoutes" Type="Self.BusRoutes" Multiplicity="1" />
+          <End Role="UserTickets" Type="Self.UserTickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusRoutes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTickets">
+              <PropertyRef Name="BusRouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTIckets_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTickets" Type="Self.UserTickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTickets">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TicketBookingModelStoreContainer">
+          <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Buses" EntityType="Self.Buses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusRoutes" EntityType="Self.BusRoutes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusServices" EntityType="Self.BusServices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Routes" EntityType="Self.Routes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTickets" EntityType="Self.UserTickets" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Buses_BusServices" Association="Self.FK_Buses_BusServices">
+            <End Role="BusServices" EntitySet="BusServices" />
+            <End Role="Buses" EntitySet="Buses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusRoutes_Buses" Association="Self.FK_BusRoutes_Buses">
+            <End Role="Buses" EntitySet="Buses" />
+            <End Role="BusRoutes" EntitySet="BusRoutes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusRoutes_Routes" Association="Self.FK_BusRoutes_Routes">
+            <End Role="Routes" EntitySet="Routes" />
+            <End Role="BusRoutes" EntitySet="BusRoutes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTIckets_BusRoutes" Association="Self.FK_UserTIckets_BusRoutes">
+            <End Role="BusRoutes" EntitySet="BusRoutes" />
+            <End Role="UserTickets" EntitySet="UserTickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTIckets_Users" Association="Self.FK_UserTIckets_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTickets" EntitySet="UserTickets" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TicketBookingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FromRoute" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ToRoute" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BusRoutes" Relationship="TicketBookingModel.FK_BusRoutes_Routes" FromRole="Route" ToRole="BusRoute" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UserTickets" Relationship="TicketBookingModel.FK_UserTIckets_Users" FromRole="User" ToRole="UserTicket" />
+        </EntityType>
+        <EntityContainer Name="TicketBookingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Routes" EntityType="Self.Route" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Admins" EntityType="TicketBookingModel.Admin" />
+          <EntitySet Name="Buses" EntityType="TicketBookingModel.Bus" />
+          <EntitySet Name="BusRoutes" EntityType="TicketBookingModel.BusRoute" />
+          <AssociationSet Name="FK_BusRoutes_Buses" Association="TicketBookingModel.FK_BusRoutes_Buses">
+            <End Role="Bus" EntitySet="Buses" />
+            <End Role="BusRoute" EntitySet="BusRoutes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusRoutes_Routes" Association="TicketBookingModel.FK_BusRoutes_Routes">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="BusRoute" EntitySet="BusRoutes" />
+          </AssociationSet>
+          <EntitySet Name="UserTickets" EntityType="TicketBookingModel.UserTicket" />
+          <AssociationSet Name="FK_UserTIckets_BusRoutes" Association="TicketBookingModel.FK_UserTIckets_BusRoutes">
+            <End Role="BusRoute" EntitySet="BusRoutes" />
+            <End Role="UserTicket" EntitySet="UserTickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTIckets_Users" Association="TicketBookingModel.FK_UserTIckets_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserTicket" EntitySet="UserTickets" />
+          </AssociationSet>
+          <EntitySet Name="BusServices" EntityType="TicketBookingModel.BusService" />
+          <AssociationSet Name="FK_Buses_BusServices" Association="TicketBookingModel.FK_Buses_BusServices">
+            <End Role="BusService" EntitySet="BusServices" />
+            <End Role="Bus" EntitySet="Buses" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Bus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BusServiceId" Type="Int32" Nullable="false" />
+          <Property Name="BusNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Seats" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="BusRoutes" Relationship="TicketBookingModel.FK_BusRoutes_Buses" FromRole="Bus" ToRole="BusRoute" />
+          <NavigationProperty Name="BusService" Relationship="TicketBookingModel.FK_Buses_BusServices" FromRole="Bus" ToRole="BusService" />
+        </EntityType>
+        <EntityType Name="BusRoute">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BusId" Type="Int32" Nullable="false" />
+          <Property Name="RouteId" Type="Int32" Nullable="false" />
+          <Property Name="ArrivalTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DepartureTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReservedSeats" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bus" Relationship="TicketBookingModel.FK_BusRoutes_Buses" FromRole="BusRoute" ToRole="Bus" />
+          <NavigationProperty Name="Route" Relationship="TicketBookingModel.FK_BusRoutes_Routes" FromRole="BusRoute" ToRole="Route" />
+          <NavigationProperty Name="UserTickets" Relationship="TicketBookingModel.FK_UserTIckets_BusRoutes" FromRole="BusRoute" ToRole="UserTicket" />
+        </EntityType>
+        <Association Name="FK_BusRoutes_Buses">
+          <End Type="TicketBookingModel.Bus" Role="Bus" Multiplicity="1" />
+          <End Type="TicketBookingModel.BusRoute" Role="BusRoute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BusRoute">
+              <PropertyRef Name="BusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusRoutes_Routes">
+          <End Type="TicketBookingModel.Route" Role="Route" Multiplicity="1" />
+          <End Type="TicketBookingModel.BusRoute" Role="BusRoute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BusRoute">
+              <PropertyRef Name="RouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="UserTicket">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ReservedSeats" Type="Int32" Nullable="false" />
+          <Property Name="TicketId" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="BusRouteId" Type="Int32" Nullable="false" />
+          <Property Name="PaidFare" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="BusRoute" Relationship="TicketBookingModel.FK_UserTIckets_BusRoutes" FromRole="UserTicket" ToRole="BusRoute" />
+          <NavigationProperty Name="User" Relationship="TicketBookingModel.FK_UserTIckets_Users" FromRole="UserTicket" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserTIckets_BusRoutes">
+          <End Type="TicketBookingModel.BusRoute" Role="BusRoute" Multiplicity="1" />
+          <End Type="TicketBookingModel.UserTicket" Role="UserTicket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusRoute">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTicket">
+              <PropertyRef Name="BusRouteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTIckets_Users">
+          <End Type="TicketBookingModel.User" Role="User" Multiplicity="1" />
+          <End Type="TicketBookingModel.UserTicket" Role="UserTicket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTicket">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BusService">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Buses" Relationship="TicketBookingModel.FK_Buses_BusServices" FromRole="BusService" ToRole="Bus" />
+        </EntityType>
+        <Association Name="FK_Buses_BusServices">
+          <End Type="TicketBookingModel.BusService" Role="BusService" Multiplicity="1" />
+          <End Type="TicketBookingModel.Bus" Role="Bus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusService">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bus">
+              <PropertyRef Name="BusServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TicketBookingModelStoreContainer" CdmEntityContainer="TicketBookingEntities">
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="TicketBookingModel.Route">
+              <MappingFragment StoreEntitySet="Routes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FromRoute" ColumnName="FromRoute" />
+                <ScalarProperty Name="ToRoute" ColumnName="ToRoute" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="TicketBookingModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Admins">
+            <EntityTypeMapping TypeName="TicketBookingModel.Admin">
+              <MappingFragment StoreEntitySet="Admins">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Buses">
+            <EntityTypeMapping TypeName="TicketBookingModel.Bus">
+              <MappingFragment StoreEntitySet="Buses">
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Seats" ColumnName="Seats" />
+                <ScalarProperty Name="BusNumber" ColumnName="BusNumber" />
+                <ScalarProperty Name="BusServiceId" ColumnName="BusServiceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusRoutes">
+            <EntityTypeMapping TypeName="TicketBookingModel.BusRoute">
+              <MappingFragment StoreEntitySet="BusRoutes">
+                <ScalarProperty Name="ReservedSeats" ColumnName="ReservedSeats" />
+                <ScalarProperty Name="DepartureTime" ColumnName="DepartureTime" />
+                <ScalarProperty Name="ArrivalTime" ColumnName="ArrivalTime" />
+                <ScalarProperty Name="RouteId" ColumnName="RouteId" />
+                <ScalarProperty Name="BusId" ColumnName="BusId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTickets">
+            <EntityTypeMapping TypeName="TicketBookingModel.UserTicket">
+              <MappingFragment StoreEntitySet="UserTickets">
+                <ScalarProperty Name="PaidFare" ColumnName="PaidFare" />
+                <ScalarProperty Name="BusRouteId" ColumnName="BusRouteId" />
+                <ScalarProperty Name="TicketId" ColumnName="TicketId" />
+                <ScalarProperty Name="ReservedSeats" ColumnName="ReservedSeats" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusServices">
+            <EntityTypeMapping TypeName="TicketBookingModel.BusService">
+              <MappingFragment StoreEntitySet="BusServices">
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

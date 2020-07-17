@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="73d9c94df4bb45069aea1ec4e9cead6b" Name="Diagram1">
+        <EntityTypeShape EntityType="TicketBookingModel.Route" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TicketBookingModel.User" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TicketBookingModel.Admin" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="TicketBookingModel.Bus" Width="1.5" PointX="8" PointY="5.25" />
+        <EntityTypeShape EntityType="TicketBookingModel.BusRoute" Width="1.5" PointX="10.25" PointY="5.25" />
+        <AssociationConnector Association="TicketBookingModel.FK_BusRoutes_Buses" />
+        <AssociationConnector Association="TicketBookingModel.FK_BusRoutes_Routes" />
+        <EntityTypeShape EntityType="TicketBookingModel.UserTicket" Width="1.5" PointX="12.5" PointY="3.125" />
+        <AssociationConnector Association="TicketBookingModel.FK_UserTIckets_BusRoutes" />
+        <AssociationConnector Association="TicketBookingModel.FK_UserTIckets_Users" />
+        <EntityTypeShape EntityType="TicketBookingModel.BusService" Width="1.5" PointX="5.75" PointY="6.625" />
+        <AssociationConnector Association="TicketBookingModel.FK_Buses_BusServices" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
